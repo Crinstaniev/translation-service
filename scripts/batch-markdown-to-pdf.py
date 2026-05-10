@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from pdf_manga_translator.markdown_pdf import (  # noqa: E402
+from pdf_pipeline.markdown_pdf import (  # noqa: E402
     RenderOptions,
     PdfRecord,
     convert_markdown_to_pdf,

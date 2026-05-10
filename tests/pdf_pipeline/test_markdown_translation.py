@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from pdf_manga_translator.markdown_translation import (
+from pdf_pipeline.markdown_translation import (
     TranslationState,
     discover_markdown_files,
     load_context,

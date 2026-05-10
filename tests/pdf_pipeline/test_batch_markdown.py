@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from pdf_manga_translator.batch_markdown import (
+from pdf_pipeline.batch_markdown import (
     discover_pdfs,
     output_stem_for_pdf,
     per_pdf_output_dir,

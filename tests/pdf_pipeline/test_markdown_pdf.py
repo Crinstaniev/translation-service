@@ -2,7 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from pdf_manga_translator.markdown_pdf import (
+from pdf_pipeline.markdown_pdf import (
     RenderOptions,
     discover_input_markdown,
     markdown_to_html,

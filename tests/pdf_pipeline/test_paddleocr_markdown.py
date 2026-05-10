@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from pdf_manga_translator.paddleocr_markdown import (
+from pdf_pipeline.paddleocr_markdown import (
     build_layout_parsing_payload,
     combine_markdown_pages,
     save_layout_response,

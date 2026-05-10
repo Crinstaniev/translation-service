@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from pdf_manga_translator.paddleocr_markdown import (
+from pdf_pipeline.paddleocr_markdown import (
     default_stem,
     request_layout_parsing,
     save_layout_response,

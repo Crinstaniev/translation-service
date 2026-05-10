@@ -8,14 +8,15 @@
 - 历史记录与实时事件（`/translations/*`）
 
 同时包含一个 Vue 前端用于在线提交测试翻译与查看翻译历史。
-此外已整合 `pdf-manga-translator` 流水线，用于 PDF OCR 提取、批量翻译、回生 PDF。
+此外项目内已拆分两条内容处理流水线：`PDF pipeline` 与 `Manga pipeline`。
 
 ## 目录结构
 
 - `app/`：后端服务代码（FastAPI）
 - `web/`：前端页面（Vue + Vite）
 - `scripts/`：本地启动/测试脚本
-- `pdf_manga_translator/`：PDF/漫画翻译流水线核心模块
+- `pdf_pipeline/`：PDF 翻译流水线核心模块
+- `manga_pipeline/`：漫画翻译流水线核心模块（独立演进）
 - `prompts/`：批量翻译提示词与术语表
 - `docs/`：接口文档与部署说明
 - `docker-compose.yml`：一键启动（vLLM + API + Web）
@@ -127,7 +128,7 @@ pytest
 cd web && npm test
 ```
 
-## PDF/漫画翻译流水线
+## PDF Pipeline
 
 整合后的批处理脚本：
 
@@ -150,7 +151,15 @@ PaddleOCR 相关配置：
 
 更多背景和流程细节见：
 
-- `pdf_manga_translator/` 目录下的实现和测试用例
+- `pdf_pipeline/` 与 `tests/pdf_pipeline/`
+
+## Manga Pipeline
+
+- 独立命名空间：`manga_pipeline/`
+- 独立测试目录：`tests/manga_pipeline/`
+- 独立入口脚本：`scripts/manga-pipeline.py`
+
+当前状态：入口与结构已独立，后续漫画气泡级检测、回填、重绘能力将在该流水线中实现，不与 PDF Pipeline 混用。
 
 ## Git 仓库
 

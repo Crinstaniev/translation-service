@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from pdf_manga_translator.markdown_translation import (  # noqa: E402
+from pdf_pipeline.markdown_translation import (  # noqa: E402
     DEFAULT_CONTEXT,
     DEFAULT_TERMS,
     BatchTranslateRecord,

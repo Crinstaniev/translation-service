@@ -6,7 +6,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
 
-from pdf_manga_translator.paddleocr_markdown import (
+from pdf_pipeline.paddleocr_markdown import (
     default_stem,
     request_layout_parsing,
     save_layout_response,
