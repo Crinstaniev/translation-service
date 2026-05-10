@@ -1,0 +1,34 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.python-version
+
+# Virtual env & local env files
+.env
+!.env.example
+!.env.docker.example
+
+# Logs / coverage
+*.log
+.coverage
+htmlcov/
+
+# Node / frontend
+node_modules/
+web/node_modules/
+web/dist/
+dist/
+build/
+
+# Local/runtime artifacts
+.run/
+.codex
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,91 @@
+services:
+  vllm:
+    image: ${VLLM_IMAGE:-vllm/vllm-openai:latest}
+    ipc: host
+    command:
+      - --model
+      - /models/HY-MT1.5-7B-GPTQ-Int4
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --served-model-name
+      - ${VLLM_MODEL_NAME:-hy-mt15-7b}
+      - --tensor-parallel-size
+      - "1"
+      - --gpu-memory-utilization
+      - ${VLLM_GPU_MEMORY_UTILIZATION:-0.82}
+      - --max-model-len
+      - ${VLLM_MAX_MODEL_LEN:-2048}
+      - --max-num-seqs
+      - ${VLLM_MAX_NUM_SEQS:-4}
+    environment:
+      VLLM_USE_MODELSCOPE: ${VLLM_USE_MODELSCOPE:-true}
+      VLLM_LOGGING_LEVEL: ${VLLM_LOGGING_LEVEL:-INFO}
+    ports:
+      - "${VLLM_PORT:-8000}:8000"
+    volumes:
+      - type: bind
+        source: ${VLLM_MODEL_PATH:-${HOME}/models/HY-MT1.5-7B-GPTQ-Int4}
+        target: /models/HY-MT1.5-7B-GPTQ-Int4
+        read_only: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - python3 -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/v1/models', timeout=5)"
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+
+  api:
+    image: ${API_IMAGE:-translation-service-api:local}
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      TRANSLATION_SERVICE_HOST: 0.0.0.0
+      TRANSLATION_SERVICE_PORT: 8010
+      VLLM_BASE_URL: http://vllm:8000
+      VLLM_MODEL_NAME: ${VLLM_MODEL_NAME:-hy-mt15-7b}
+      VLLM_REQUEST_TIMEOUT_SECONDS: ${VLLM_REQUEST_TIMEOUT_SECONDS:-60}
+      TRANSLATION_TEMPERATURE: ${TRANSLATION_TEMPERATURE:-0.3}
+      TRANSLATION_TOP_P: ${TRANSLATION_TOP_P:-0.6}
+      TRANSLATION_TOP_K: ${TRANSLATION_TOP_K:-20}
+      TRANSLATION_REPETITION_PENALTY: ${TRANSLATION_REPETITION_PENALTY:-1.05}
+      TRANSLATION_HISTORY_LIMIT: ${TRANSLATION_HISTORY_LIMIT:-500}
+      STRICT_HEALTHCHECK: ${STRICT_HEALTHCHECK:-false}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+    ports:
+      - "${TRANSLATION_SERVICE_PORT:-8010}:8010"
+    depends_on:
+      vllm:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8010/health', timeout=5)"
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+
+  web:
+    image: ${WEB_IMAGE:-translation-service-web:local}
+    build:
+      context: web
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
+    ports:
+      - "${WEB_PORT:-5173}:80"
+    depends_on:
+      api:
+        condition: service_started

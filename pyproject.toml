@@ -1,0 +1,22 @@
+[project]
+name = "translation-service"
+version = "0.1.0"
+description = "Local translation API backed by vLLM and HY-MT1.5."
+readme = "docs/vllm-hy-mt15-7b-gptq-int4-deployment.md"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115,<1.0",
+  "httpx>=0.28,<1.0",
+  "pydantic>=2.10,<3.0",
+  "uvicorn>=0.34,<1.0",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
