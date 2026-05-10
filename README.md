@@ -8,14 +8,18 @@
 - 历史记录与实时事件（`/translations/*`）
 
 同时包含一个 Vue 前端用于在线提交测试翻译与查看翻译历史。
+此外已整合 `pdf-manga-translator` 流水线，用于 PDF OCR 提取、批量翻译、回生 PDF。
 
 ## 目录结构
 
 - `app/`：后端服务代码（FastAPI）
 - `web/`：前端页面（Vue + Vite）
 - `scripts/`：本地启动/测试脚本
+- `pdf_manga_translator/`：PDF/漫画翻译流水线核心模块
+- `prompts/`：批量翻译提示词与术语表
 - `docs/`：接口文档与部署说明
 - `docker-compose.yml`：一键启动（vLLM + API + Web）
+- `docker-compose.paddleocr.yml`：PaddleOCR-VL 服务编排
 
 ## 先决条件
 
@@ -122,6 +126,31 @@ docker compose --env-file .env.docker up --build
 pytest
 cd web && npm test
 ```
+
+## PDF/漫画翻译流水线
+
+整合后的批处理脚本：
+
+- `scripts/batch-pdf-to-markdown.py`：PDF -> Markdown（调用 PaddleOCR-VL）
+- `scripts/batch-translate-markdown.py`：Markdown -> 中文 Markdown（调用本仓翻译 API）
+- `scripts/batch-markdown-to-pdf.py`：中文 Markdown -> HTML/PDF
+
+便捷命令：
+
+```bash
+scripts/batch-pdf-to-markdown.py input/pdfs --output-dir out/markdown
+scripts/batch-translate-markdown.py out/markdown --output-dir out/translated
+scripts/batch-markdown-to-pdf.py out/translated --output-dir out/pdf --asset-root out/markdown
+```
+
+PaddleOCR 相关配置：
+
+- `docker-compose.paddleocr.yml`
+- `vlm_server_config.yaml`
+
+更多背景和流程细节见：
+
+- `pdf_manga_translator/` 目录下的实现和测试用例
 
 ## Git 仓库
 

@@ -8,6 +8,7 @@ dependencies = [
   "fastapi>=0.115,<1.0",
   "httpx>=0.28,<1.0",
   "pydantic>=2.10,<3.0",
+  "requests>=2.32,<3.0",
   "uvicorn>=0.34,<1.0",
 ]
 
@@ -16,7 +17,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["app"]
+packages = ["app", "pdf_manga_translator"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

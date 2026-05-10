@@ -27,6 +27,7 @@ build/
 # Local/runtime artifacts
 .run/
 .codex
+out/
 
 # OS / editor
 .DS_Store
